@@ -100,6 +100,13 @@ class ProjectStore {
     }
   }
 
+  updateTasks(projectId: string, tasks: Task[]) {
+    const project = this.projects.find((currentTask) => currentTask.id === projectId);
+    if (project) {
+      project.tasks = tasks;
+    }
+  }
+
   deleteTask(projectId: string, taskId: string) {
     const project = this.findProject(projectId);
     if (project) {
@@ -132,17 +139,23 @@ class ProjectStore {
     return this.projects.find((currentProject) => currentProject.id === this.selectedProjectId);
   }
 
-  get tasksByStatus() {
-    if (!this.selectedProject) return {} as Record<TaskStatus, Task[]>;
-    const grouped = {
-      [TaskStatus.TODO]: [] as Task[],
-      [TaskStatus.IN_PROGRESS]: [] as Task[],
-      [TaskStatus.DONE]: [] as Task[],
+  get tasksByStatus(): Record<TaskStatus, Task[]> {
+    if (!this.selectedProject) {
+      return {
+        [TaskStatus.TODO]: [],
+        [TaskStatus.IN_PROGRESS]: [],
+        [TaskStatus.DONE]: [],
+      };
+    }
+    const result: Record<TaskStatus, Task[]> = {
+      [TaskStatus.TODO]: [],
+      [TaskStatus.IN_PROGRESS]: [],
+      [TaskStatus.DONE]: [],
     };
-    this.selectedProject.tasks.forEach((task) => {
-      grouped[task.status].push(task);
-    });
-    return grouped;
+    for (const task of this.selectedProject.tasks) {
+      result[task.status].push(task);
+    }
+    return result;
   }
 
   get taskCountByStatus(): Record<TaskStatus, number> {
@@ -152,9 +165,9 @@ class ProjectStore {
       [TaskStatus.DONE]: 0,
     };
     if (!this.selectedProject) return counts;
-    this.selectedProject.tasks.forEach((task) => {
+    for (const task of this.selectedProject.tasks) {
       counts[task.status]++;
-    });
+    }
     return counts;
   }
 }

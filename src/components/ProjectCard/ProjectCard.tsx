@@ -27,11 +27,27 @@ export const ProjectCard = ({ project, onEdit, onDelete }: ProjectCardProps) => 
       </CardContent>
 
       <CardActions>
-        <IconButton size="small" onClick={() => onEdit(project)} color="primary">
+        <IconButton
+          size="small"
+          onClick={(e) => {
+            e.stopPropagation();
+
+            onEdit(project);
+          }}
+          color="primary"
+        >
           <EditIcon />
         </IconButton>
 
-        <IconButton size="small" onClick={() => onDelete(project.id)} color="error">
+        <IconButton
+          size="small"
+          onClick={(e) => {
+            e.stopPropagation();
+
+            onDelete(project.id);
+          }}
+          color="error"
+        >
           <DeleteIcon />
         </IconButton>
       </CardActions>
