@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { Container, Grid, Button, Typography, Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -16,6 +17,8 @@ export const ProjectsListPage = observer(() => {
   const projectToDelete = projectStore.projects.find(
     (currentProject) => currentProject.id === deletingProjectId
   );
+
+  const navigate = useNavigate();
 
   const handleAdd = () => {
     setEditingProject(null);
@@ -68,11 +71,13 @@ export const ProjectsListPage = observer(() => {
         <Grid container spacing={3}>
           {projectStore.projects.map((project) => (
             <Grid key={project.id} size={{ xs: 12, sm: 6, md: 4 }}>
-              <ProjectCard
-                project={project}
-                onEdit={handleEdit}
-                onDelete={() => handleDelete(project.id)}
-              />
+              <div onClick={() => navigate(`/board/${project.id}`)} style={{ cursor: 'pointer' }}>
+                <ProjectCard
+                  project={project}
+                  onEdit={handleEdit}
+                  onDelete={() => handleDelete(project.id)}
+                />{' '}
+              </div>
             </Grid>
           ))}
         </Grid>
